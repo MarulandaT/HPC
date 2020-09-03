@@ -7,7 +7,7 @@
  ./secuencial
 */
 
-int row = 1000, col = 1000;
+int row = 16, col = 16;
 double** A;
 double** B;
 double** C;
@@ -48,8 +48,7 @@ int main(int argc, char* argv[]){
   //Impresión de resultado
   print_result();
   secs = (double)(t_fin - t_ini) / CLOCKS_PER_SEC;
-  printf("%ld\n", CLOCKS_PER_SEC);
-  printf("%.16g milisegundos\n", secs );
+  printf("Tiempo de ejecucion:\t%.16g milisegundos\n", secs );
 
   //Liberación de memoria
   free(A);
@@ -74,44 +73,43 @@ void matmul(int col, int row){
     }
    }
   }
+  
 }
 //----------------------------------------
 void read_mat(int col, int row){
   int i,j;
   FILE *file;
-  file=fopen("matext1000x1000.txt", "r");
+  file=fopen("matext16x16.txt", "r");
   
- printf(" Primera matriz: \n");
   for(i = 0; i < row; i++){
       for(j = 0; j < col; j++){
        if (!fscanf(file, "%lf", &A[i][j])) 
            break;
-      printf("%.0lf ",A[i][j]);
       }
-      printf("\n");
    }
-
-  printf("\n Segunda matriz \n");
 
   for(i = 0; i < row; i++){
       for(j = 0; j < col; j++){
          if (!fscanf(file, "%lf", &B[i][j])) 
              break; 
-         printf("%.0lf ",B[i][j]); 
        }
-      printf("\n");
+
    }
+
   fclose(file);
 }
 
 void print_result(){
   int i,j;
-  printf("\n Matriz resultado: \n");
+  FILE *file; 
+  file = fopen("Resultado.txt", "w"); 
+  
   for(i = 0; i < row; i++){
       for(j = 0; j < col; j++){ 
-         printf("%.0lf ",C[i][j]); 
+         fprintf(file, "%.0lf ", C[i][j]);
        }
-      printf("\n");
+      fprintf(file, "\n");
    }
 
+  fclose (file);
 }
