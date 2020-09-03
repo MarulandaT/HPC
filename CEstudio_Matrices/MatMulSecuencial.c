@@ -7,7 +7,7 @@
  ./secuencial
 */
 
-int row = 16, col = 16;
+int row = 4, col = 4;
 double** A;
 double** B;
 double** C;
@@ -73,13 +73,13 @@ void matmul(int col, int row){
     }
    }
   }
-  
+
 }
 //----------------------------------------
 void read_mat(int col, int row){
   int i,j;
   FILE *file;
-  file=fopen("matext16x16.txt", "r");
+  file=fopen("matrices.txt", "r");
   
   for(i = 0; i < row; i++){
       for(j = 0; j < col; j++){
@@ -102,7 +102,7 @@ void read_mat(int col, int row){
 void print_result(){
   int i,j;
   FILE *file; 
-  file = fopen("Resultado.txt", "w"); 
+  file = fopen("resultadosecuencial.txt", "w"); 
   
   for(i = 0; i < row; i++){
       for(j = 0; j < col; j++){ 
