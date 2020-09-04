@@ -1,5 +1,5 @@
 import numpy as np
-n= 4
+n = 20
 A = np.random.randint(0,9,size = (n,n))
 B = np.random.randint(0,9,size = (n,n))
 C = np.matmul(A,B)

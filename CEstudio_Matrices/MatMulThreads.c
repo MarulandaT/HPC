@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <time.h> 
+#include <sys/time.h>
+#include <time.h>
 
-/* gcc -othread -pthread MatMulThreads.c 
-  ./thread
+/* sudo gcc -othread -pthread MatMulThreads.c 
+   sudo ./thread
 */
 
 //Variables globales
 int num_of_threads = 2;
-int row = 4,col=4;
+int row = 20, col = 20;
 double** A;
 double** B;
 double** C;
@@ -24,7 +25,7 @@ void *matmul(void* rank);
 int main(int argc, char* argv[]){
   
   pthread_t tid[num_of_threads];
-  int i, j; 
+  int i, j;
   long rank;
 
   A = malloc(row*sizeof(double*)); 
@@ -43,10 +44,13 @@ int main(int argc, char* argv[]){
   read_mat(col,row);
 
   
-  clock_t t_ini, t_fin;
-  double secs;
+  struct timeval start;
+  struct timeval end;
+  double milisecs;
+  long seconds, useconds;
   
-  t_ini = clock();
+  gettimeofday(&start, 0);
+
   //Creación de threads
   for (rank = 0; rank < num_of_threads; rank++)
      pthread_create(&tid[rank], NULL,matmul , (void*) rank);
@@ -54,13 +58,16 @@ int main(int argc, char* argv[]){
   //Unión de threads
   for (rank = 0; rank < num_of_threads; rank++)
       pthread_join(tid[rank], NULL);
-  t_fin = clock();
+
+  gettimeofday(&end, 0);
 
   //Impresión de resultado
   print_result();
-  secs = (double)(t_fin - t_ini) / CLOCKS_PER_SEC;
+  seconds  = end.tv_sec  - start.tv_sec;
+  useconds = end.tv_usec - start.tv_usec;
+  milisecs = ((seconds) * 1000 + useconds/1000.0);
   printf("Tiempo de ejecucion:\t");
-  printf("%.16g milisegundos\n", secs );
+  printf("%.16g milisegundos\n", milisecs );
 
   //Liberación de memoria
   free(A);
@@ -79,7 +86,13 @@ void *matmul(void* id_arg){
   long  id = (long ) id_arg;
   int rows_per_thr = col/num_of_threads;
   int start_index = id*rows_per_thr;
-  int final_index = (id+1)*rows_per_thr;
+  int final_index;
+  if (id+1==num_of_threads){
+    final_index = row; 
+  }
+  else {
+    final_index = (id+1)*rows_per_thr;
+  }
 
   for(i=start_index;i<final_index;i++){
    for(j=0;j<col;j++){

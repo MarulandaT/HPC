@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <time.h> 
+#include <sys/time.h>
+#include <time.h>
 
-/*gcc -osecuencial MatMulSecuencial.c
- ./secuencial
+/* gcc -osecuencial MatMulSecuencial.c
+   ./secuencial
 */
 
-int row = 4, col = 4;
+int row = 20, col = 20;
 double** A;
 double** B;
 double** C;
@@ -37,18 +38,25 @@ int main(int argc, char* argv[]){
   //Lectura de matrices
   read_mat(col,row);
 
-  clock_t t_ini, t_fin;
-  double secs;
+  struct timeval start;
+  struct timeval end;
+  double milisecs;
+  long seconds, useconds;
   
-  t_ini = clock();
+  gettimeofday(&start, 0);
+
   //Realizar la multiplicacion
   matmul(col, row); 
-  t_fin = clock();
+  
+  gettimeofday(&end, 0);
 
   //Impresión de resultado
   print_result();
-  secs = (double)(t_fin - t_ini) / CLOCKS_PER_SEC;
-  printf("Tiempo de ejecucion:\t%.16g milisegundos\n", secs );
+  seconds  = end.tv_sec  - start.tv_sec;
+  useconds = end.tv_usec - start.tv_usec;
+  milisecs = ((seconds) * 1000 + useconds/1000.0);
+  printf("Tiempo de ejecucion:\t");
+  printf("%.16g milisegundos\n", milisecs );
 
   //Liberación de memoria
   free(A);
