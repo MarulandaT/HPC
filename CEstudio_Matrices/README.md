@@ -28,5 +28,10 @@ $ ./thread
 Posterior a esta ejecución se visualiza en pantalla el tiempo empleado por el algoritmo secuencial en milisegundos. 
 Para el caso en el que se quiera comprobar si la multiplicación se hizo correctamente, es necesario ubicar el ficheo "resultadothreads.txt" en la carpeta donde se almacenó el proyecto. 
 
-10. Finalmente, con la información obtenida es posible hacer análisis de speedup. 
+10. Finalmente, con la información obtenida es posible hacer análisis de speedup. En este caso los resultados obtenidos pueden consultarse detalladamente en: https://docs.google.com/document/d/1Z0AMP4TV5UEVETVIBiD-8pT2JcYE7DT0JuLAT3VlzI4/edit?usp=sharing
 
+
+Colaboradores: 
+Angel David Santa Giraldo 
+Samir Mateo Soto Buitrago 
+Luis Miguel Marulanda Torres 
