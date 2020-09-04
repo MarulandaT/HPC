@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
 #include <sys/time.h>
 #include <time.h>
 
@@ -21,7 +20,6 @@ void print_result();
 int main(int argc, char* argv[]){
   
   int i, j;     
-  long rank;
 
   A = malloc(row*sizeof(double*)); 
       for(i=0;i<row;i++)
@@ -63,13 +61,11 @@ int main(int argc, char* argv[]){
   free(B);
   free(C);
 
-  // Fin de proceso padre
-  pthread_exit(NULL);
   return 0;
 }
 
 //-------------------------------------------
-// Función que va ejecutarse en cada thread
+
 void matmul(int col, int row){
   int i,j,k;
 
