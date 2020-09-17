@@ -6,7 +6,7 @@
 #include <time.h>
 #include <sys/wait.h>
 #include <chrono>
-//#include "./csv_generator.h"
+#include "./csv_generator.h"
 //g++ -o fork MatMulFork.cpp 
 
 void matmul (int ** A , int ** B ,int ** C, int number,long i);
@@ -15,8 +15,8 @@ void create(int ** A , int number);
 void print_result(int ** m, int number);
 
 int main (int argc, char *argv[]){
-    //int number = (int)atoi(argv[1]);
-    int number = 4; 
+    int number = (int)atoi(argv[1]);
+    //int number = 4; 
 
     //CREACION DE LAS MATRICES A Y B 
     int  ** A;
@@ -54,10 +54,10 @@ int main (int argc, char *argv[]){
 
     printf("Tiempo de ejecucion:\t");
     printf("%.16g milisegundos\n", milisecs );
-    //csv_time(milisecs,number);
-    print_result(A,number);
-    print_result(B,number);
-    print_result(C,number);
+    csv_time(milisecs,number);
+    //print_result(A,number);
+    //print_result(B,number);
+    //print_result(C,number);
 
     return 1;
 }
