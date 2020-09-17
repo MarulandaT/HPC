@@ -37,8 +37,6 @@ int main (int argc, char *argv[]){
     create(A,number);
     create(B,number);
 
-    //std::chrono::time_point<std::chrono::system_clock> start, end;
-    //start = std::chrono::system_clock::now();
     struct timeval start;
     struct timeval end;
     double milisecs;
@@ -52,8 +50,8 @@ int main (int argc, char *argv[]){
     useconds = end.tv_usec - start.tv_usec;
     milisecs = ((seconds) * 1000 + useconds/1000.0);
 
-    printf("Tiempo de ejecucion:\t");
-    printf("%.16g milisegundos\n", milisecs );
+    //printf("Tiempo de ejecucion:\t");
+    //printf("%.16g milisegundos\n", milisecs );
     csv_time(milisecs,number);
     //print_result(A,number);
     //print_result(B,number);
@@ -80,6 +78,7 @@ void solve (int ** A , int ** B , int  ** C, int number){
         p_id = fork();
         if (p_id == 0){
             matmul(A,B,C,number,i);
+            //printf("mi identificador de proceso es: %d\n", getpid());
             exit(1);
         }else continue;
         }
