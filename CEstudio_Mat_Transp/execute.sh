@@ -12,7 +12,7 @@ args=("$@")
 auto_exec(){
 	for i in {1..10}
 	do
-		for k in 10
+		for k in 10 100 250 500 1000 2000 3000
 			do
 			./"$1" $k
 			done

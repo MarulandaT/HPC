@@ -3,9 +3,6 @@
 #include <pthread.h>
 #include <sys/time.h>
 #include <time.h>
-/* sudo gcc -othread -pthread MatMulThreads.c 
-   sudo ./thread
-*/
 
 int** A;
 int** B;

@@ -7,7 +7,6 @@
 #include <time.h>
 #include <sys/wait.h>
 #include <chrono>
-//g++ -o fork MatMulFork.cpp 
 
 using namespace std; 
 
@@ -19,7 +18,6 @@ void transponer(int **D, int **B, int n) ;
 
 int main (int argc, char *argv[]){
     int number = (int)atoi(argv[1]);
-    //int number = 3; 
 
     //CREACION DE LAS MATRICES A Y B 
     int  ** A;
@@ -59,15 +57,12 @@ int main (int argc, char *argv[]){
     useconds = end.tv_usec - start.tv_usec;
     milisecs = ((seconds) * 1000 + useconds/1000.0);
 
-    //printf("Tiempo de ejecucion:\t");
     cout<< number << ","; 
     cout<< milisecs <<endl; 
-    //printf("%.16g milisegundos\n", milisecs );
-    //csv_time(milisecs,number);
     //print_result(A,number);
     //print_result(B,number);
     //print_result(C,number);
-
+    delete[] A, B, C, D; 
     return 1;
 }
 
