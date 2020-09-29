@@ -27,7 +27,7 @@ then
 	g++ -o ${args[4]} ${args[4]}.cpp 
 	auto_exec ${args[4]}
 	echo "ejecucion con hilos"
-	g++ -pthread -o ${args[5]} ${args[5]}.cpp 
+	gcc -pthread -o ${args[5]} ${args[5]}.c
 	auto_exec ${args[5]}
 	echo "ejecucion con procesos"
 	g++ -o ${args[6]} ${args[6]}.cpp 
