@@ -52,7 +52,8 @@ void print_result(int **C, int n){
 
 
 int main(int argc, char* argv[]){
-  num_of_threads = 2; 
+  num_of_threads = 2;
+   
   n = (int)atoi(argv[1]); 
   pthread_t tid[num_of_threads];
   int i, j;
@@ -103,9 +104,9 @@ int main(int argc, char* argv[]){
   printf("%d,", n);
   printf("%.16g\n", milisecs );
 
-  //print_result(A, n);
-  //print_result(B, n);
-  //print_result(C, n);
+ // print_result(A, n);
+ // print_result(B, n);
+ // print_result(C, n);
   //Liberación de memoria
   free(A); 
   free(B); 
