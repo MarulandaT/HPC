@@ -24,13 +24,12 @@ double i; // loop counter
 
 void lanzar();
 
-int main(){
-//int main(int argc, char* argv[]){
-	//int n = (int)atoi(argv[1]);
+int main(int argc, char* argv[]){
+	n = (double)atoi(argv[1]);
 
 	srand(time(NULL));
 
-	n = 100000000;
+	//n = 1000;
 	p = 0;
 	l = 1;
 
@@ -48,10 +47,9 @@ int main(){
 	seconds  = end.tv_sec  - start.tv_sec;
 	useconds = end.tv_usec - start.tv_usec;
 	milisecs = ((seconds) * 1000 + useconds/1000.0);
-	cout << milisecs <<endl; 
-
+	cout << n << "\t" << p <<"\t"; 
 	pi = (l/p)*(n);
-	cout << p << "," << pi <<"\n";
+	cout << milisecs << "\t" << pi << endl;
 }
 
 void lanzar(){
