@@ -117,9 +117,9 @@ int main(int argc, char *argv[]){
     if(rank == 0)
     {
         printf("Result\n");
-       printMat(result, n);
+        printMat(result, n);
     }
-}
+
 
     MPI_Finalize();
 
