@@ -17,11 +17,10 @@ void writeTime(double elapsed, int len, int npro){
 		fclose(f);
 }
 
-
 void printMat(double* mat, int n);
 int main(int argc, char *argv[]){
-    //int n = atoi(argv[1]); //matrixes are n x n
-    int n = 4;
+    int n = atoi(argv[1]); //matrixes are n x n
+    //int n = 4;
 	
     //Allocating Memory and Assigning Values
 
@@ -51,8 +50,6 @@ int main(int argc, char *argv[]){
         //printf("N: %d, numranks: %d\n", n, numranks);
         exit(1);
     }
-
-    
 
     if(rank == 0)
     {
