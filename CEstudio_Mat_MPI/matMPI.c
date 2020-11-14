@@ -1,10 +1,11 @@
+
 #include <stdio.h>
 #include <stdlib.h>
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 #include <omp.h>
-#include <mpi.h>
+#include "mpi.h"
 
 void writeTime(double elapsed, int len, int npro){
 		/*
@@ -20,8 +21,7 @@ void writeTime(double elapsed, int len, int npro){
 void printMat(double* mat, int n);
 int main(int argc, char *argv[]){
     int n = atoi(argv[1]); //matrixes are n x n
-    //int n = 4;
-	
+    //int n = 100;
     //Allocating Memory and Assigning Values
 
     //Start MPI
@@ -35,12 +35,12 @@ int main(int argc, char *argv[]){
     double startTime;
     double endTime;
     double tiempo;
-
+    srand(time(NULL));
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &numranks);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Get_processor_name(hostname, &len);
-   
+
     double *scatterMat = (double *)malloc((n+1)*sizeof(double));
     double *gatherMat = (double *)malloc((n+1)*sizeof(double));
     double *result = (double *)malloc(n*n*sizeof(double));
@@ -65,14 +65,14 @@ int main(int argc, char *argv[]){
     }
     //Matrix B is copied to every processor
     MPI_Bcast(mat2, n*n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    //Print matricies
+    /*Print matricies
     if(rank == 0)
     {
        printf("Matrix A\n");
        printMat(mat1, n);
        printf("Matrix B\n");
       printMat(mat2, n);
-    }
+    }*/
     
     //Matrix A is divided into blocks along the rows and distributed
     //among processors. 
@@ -109,13 +109,13 @@ int main(int argc, char *argv[]){
       writeTime(tiempo, n, numranks);
     	
 	}
-    printf("Time to complete %f\n", endTime - startTime);
+   /* printf("Time to complete %f\n", endTime - startTime);
     
     if(rank == 0)
     {
         printf("Result\n");
         printMat(result, n);
-    }
+    }*/
 
 
     MPI_Finalize();
