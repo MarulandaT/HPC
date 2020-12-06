@@ -5,16 +5,17 @@
 #include <omp.h>
 
 //mpicc -fopenmp MMOpenMPI.c -o exec
-//export OMP_NUM_THREADS=4
+//export OMP_NUM_THREADS=8
 //mpirun -np 4 -machinefile mfile ./exec 32
 //mpirun -np 4 -hosts head,wn1,wn2,wn3 ./exec 32
 
 void matMul(int n, int numranks, int rank, double* mat2, double* scatterMat, double* gatherMat);
-void writeTime(double tiempo, int tam, int wnodos);
+void writeTime(int wnodos, int hilos, int tam, double tiempo);
 void printMat(double* mat, int n);
 
 int main(int argc, char *argv[]){
     int n = atoi(argv[1]);
+    int hilos = omp_get_num_threads();
     int numranks, rank, len;
 
     double startTime;
@@ -56,7 +57,7 @@ int main(int argc, char *argv[]){
 
     if(rank == 0){	
         tiempo = endTime - startTime;
-        writeTime(tiempo, n, numranks);
+        writeTime(numranks, hilos, n, tiempo);
         /*
         printf("\ntiempo: %3f\n", tiempo);
         printf("A\n");
@@ -110,8 +111,8 @@ void printMat(double* mat, int n){
     printf("\n");
 }
 
-void writeTime(double tiempo, int tam, int wnodos){
-    FILE *f = fopen("timesP2PMPI.txt","a+");
-    fprintf(f,"%i;%i;%.6lf\n", wnodos, tam, tiempo);
+void writeTime(int wnodos, int hilos, int tam, double tiempo){
+    FILE *f = fopen("timesOpenMPI.txt","a+");
+    fprintf(f,"%i;%i;%i;%.6lf\n", wnodos, hilos, tam, tiempo);
     fclose(f);
 }
