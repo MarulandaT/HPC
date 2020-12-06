@@ -77,7 +77,7 @@ void matMul(int n, int numranks, double* mat2, double* scatterMat, double* gathe
     
     int my_id, num_threads;
     int start_index, end_index,rows_per; 
-    #pragma omp parallel firsprivate(mat2, scatterMat, gatherMat), private(fil, col, k, sum, my_id, num_threads, start_index, end_index,rows_per){
+    #pragma omp parallel firstprivate(mat2, scatterMat, gatherMat), private(fil, col, k, sum, my_id, num_threads, start_index, end_index,rows_per){
         my_id = omp_get_thread_num();
         num_threads = omp_get_num_threads();
         rows_per = (n / numranks) / num_threads; 
