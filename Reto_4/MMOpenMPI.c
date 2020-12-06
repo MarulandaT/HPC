@@ -8,11 +8,9 @@
 //mpirun -np 4 -hosts head,wn1,wn2,wn3 ./exec 8
 //mpirun -np 4 -machinefile mfile ./exec 8
 
+void matMul(int n, int numranks, double* mat2, double* scatterMat, double* gatherMat);
 void writeTime(double tiempo, int tam, int wnodos);
-
 void printMat(double* mat, int n);
-
-void Matmul(int n, int numranks, double* mat2, double* scatterMat, double* gatherMat);
 
 int main(int argc, char *argv[]){
     int n = atoi(argv[1]);
@@ -49,20 +47,8 @@ int main(int argc, char *argv[]){
 
     MPI_Scatter(&mat1[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, scatterMat, n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
-    /*
-    int sum = 0;
-
-    for(int fil = 0; fil < n/numranks; fil++){
-        for(int col = 0; col < n; col++){
-            for(int k = 0; k < n; k++){
-                sum = sum + mat2[n*k+col]*scatterMat[n*fil+k];
-            }
-            gatherMat[n*fil+col] = sum;
-            sum = 0;
-        }
-    }
-    */
-    Matmul(n, numranks, mat2, scatterMat, gatherMat);
+    
+    matMul(n, numranks, mat2, scatterMat, gatherMat);
 
     MPI_Gather(gatherMat, n*n/numranks, MPI_DOUBLE, &result[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
@@ -86,6 +72,41 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
+void matMul(int n, int numranks, double* mat2, double* scatterMat, double* gatherMat){
+    int fil, col, k, sum;
+    
+    int my_id, num_threads;
+    int start_index, end_index,rows_per; 
+    #pragma omp parallel firsprivate(mat2, scatterMat, gatherMat), private(fil, col, k, sum, my_id, num_threads, start_index, end_index,rows_per){
+        my_id = omp_get_thread_num();
+        num_threads = omp_get_num_threads();
+        rows_per = (n / numranks) / num_threads; 
+        start_index = my_id * rows_per; 
+        end_index = start_index + rows_per;
+        sum = 0;
+        for(fil = start_index; fil < end_index; fil++){
+            for(col = 0; col < n; col++){
+                for(k = 0; k < n; k++){
+                    sum = sum + mat2[n*k+col]*scatterMat[n*fil+k];
+                }
+                gatherMat[n*fil+col] = sum;
+                sum = 0;
+            }
+        }
+    }
+    /*
+    sum = 0;
+    for(fil = 0; fil < n/numranks; fil++){
+        for(col = 0; col < n; col++){
+            for(k = 0; k < n; k++){
+                sum = sum + mat2[n*k+col]*scatterMat[n*fil+k];
+            }
+            gatherMat[n*fil+col] = sum;
+            sum = 0;
+        }
+    }
+    */
+}
 
 void printMat(double* mat, int n){
     for(int i = 0; i < n; i++)
@@ -103,18 +124,4 @@ void writeTime(double tiempo, int tam, int wnodos){
     FILE *f = fopen("timesP2PMPI.txt","a+");
     fprintf(f,"%i;%i;%.6lf\n", wnodos, tam, tiempo);
     fclose(f);
-}
-
-void Matmul(int n, int numranks, double* mat2, double* scatterMat, double* gatherMat){
-    int sum = 0;
-
-    for(int fil = 0; fil < n/numranks; fil++){
-        for(int col = 0; col < n; col++){
-            for(int k = 0; k < n; k++){
-                sum = sum + mat2[n*k+col]*scatterMat[n*fil+k];
-            }
-            gatherMat[n*fil+col] = sum;
-            sum = 0;
-        }
-    }
 }
