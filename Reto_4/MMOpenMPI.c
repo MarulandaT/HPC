@@ -34,8 +34,8 @@ int main(int argc, char *argv[]){
     double endTime;
     double tiempo;
 
-    double *mat1 = (double *)malloc(n*n*sizeof(double));
-    double *mat2 = (double *)malloc(n*n*sizeof(double));
+    int *mat1 = (int *)malloc(n*n*sizeof(int));
+    int *mat2 = (int *)malloc(n*n*sizeof(int));
 
     srand(time(NULL));
     for(int i = 0; i < n; i++){
@@ -50,18 +50,18 @@ int main(int argc, char *argv[]){
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Get_processor_name(hostname, &len);
 
-    double *scatterMat = (double *)malloc((n*n/numranks)*sizeof(double));
-    double *gatherMat = (double *)malloc((n*n/numranks)*sizeof(double));
-    double *result = (double *)malloc(n*n*sizeof(double));
+    int *scatterMat = (int *)malloc((n*n/numranks)*sizeof(int));
+    int *gatherMat = (int *)malloc((n*n/numranks)*sizeof(int));
+    int *result = (int *)malloc(n*n*sizeof(int));
 
     MPI_Bcast(mat2, n*n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     startTime = MPI_Wtime();
 
-    MPI_Scatter(&mat1[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, &scatterMat[0], n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Scatter(&mat1[(n*n/numranks)*rank], n*n/numranks, MPI_INT, &scatterMat[0], n*n/numranks, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
 
-    double sum = 0.0;
+    int sum = 0;
 
     for(int fil = 0; fil < n/numranks; fil++){
         for(int col = 0; col < n; col++){
@@ -69,11 +69,11 @@ int main(int argc, char *argv[]){
                 sum = sum + mat2[n*k+fil]*scatterMat[n*fil+k];
             }
             gatherMat[n*fil+col] = sum;
-            sum = 0.0;
+            sum = 0;
         }
     }
 
-    MPI_Gather(&gatherMat[0], n*n/numranks, MPI_DOUBLE, &result[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Gather(&gatherMat[0], n*n/numranks, MPI_INT, &result[(n*n/numranks)*rank], n*n/numranks, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
 
     endTime = MPI_Wtime();
