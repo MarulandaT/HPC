@@ -26,12 +26,13 @@ exec(){
 	done
 }
 
-echo " ${args[0]} ${args[1]} ${args[2]}"
+echo " ${args[0]} ${args[1]} "
 
 if [ "${args[0]}" == "$compile" ] &&  [ "${args[1]}" == "$run" ];
 then
 	mpicc -fopenmp MMOpenMPI.c -o run
 	exec
+    echo "success"
 else
 	echo "revisa los comandos de entrada"
 
