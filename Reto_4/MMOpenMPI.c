@@ -5,10 +5,11 @@
 #include <omp.h>
 
 //mpicc -fopenmp MMOpenMPI.c -o exec
+//export OMP_NUM_THREADS=4
 //mpirun -np 4 -hosts head,wn1,wn2,wn3 ./exec 8
 //mpirun -np 4 -machinefile mfile ./exec 8
 
-void matMul(int n, int numranks, double* mat2, double* scatterMat, double* gatherMat);
+void matMul(int n, int numranks, int rank, double* mat2, double* scatterMat, double* gatherMat);
 void writeTime(double tiempo, int tam, int wnodos);
 void printMat(double* mat, int n);
 
@@ -48,7 +49,7 @@ int main(int argc, char *argv[]){
     MPI_Scatter(&mat1[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, scatterMat, n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
     
-    matMul(n, numranks, mat2, scatterMat, gatherMat);
+    matMul(n, numranks, rank, mat2, scatterMat, gatherMat);
 
     MPI_Gather(gatherMat, n*n/numranks, MPI_DOUBLE, &result[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
@@ -57,14 +58,16 @@ int main(int argc, char *argv[]){
 
     if(rank == 0){	
         tiempo = endTime - startTime;
+        writeTime(tiempo, n, numranks);
+        /*
         printf("\ntiempo: %3f\n", tiempo);
-        //writeTime(tiempo, n, numranks);
-        //printf("A\n");
-        //printMat(mat1, n);
-        //printf("B\n");
-        //printMat(mat2, n);
-        //printf("Result\n");
-        //printMat(result, n);
+        printf("A\n");
+        printMat(mat1, n);
+        printf("B\n");
+        printMat(mat2, n);
+        printf("Result\n");
+        printMat(result, n);
+        */
 	}
 
     MPI_Finalize();
@@ -72,7 +75,7 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
-void matMul(int n, int numranks, double* mat2, double* scatterMat, double* gatherMat){
+void matMul(int n, int numranks, int rank, double* mat2, double* scatterMat, double* gatherMat){
     int fil, col, k, sum;
     int my_id, num_threads;
     int start_index, end_index, rows_per;
@@ -84,6 +87,7 @@ void matMul(int n, int numranks, double* mat2, double* scatterMat, double* gathe
         start_index = my_id * rows_per; 
         end_index = start_index + rows_per;
         sum = 0;
+        printf("Soy el hilo %i del procesador %i", my_id, rank);
         for(fil = start_index; fil < end_index; fil++){
             for(col = 0; col < n; col++){
                 for(k = 0; k < n; k++){
@@ -94,19 +98,6 @@ void matMul(int n, int numranks, double* mat2, double* scatterMat, double* gathe
             }
         }
     }
-    /*
-    int fil, col, k, sum;
-    sum = 0;
-    for(fil = 0; fil < n/numranks; fil++){
-        for(col = 0; col < n; col++){
-            for(k = 0; k < n; k++){
-                sum = sum + mat2[n*k+col]*scatterMat[n*fil+k];
-            }
-            gatherMat[n*fil+col] = sum;
-            sum = 0;
-        }
-    }
-    */
 }
 
 void printMat(double* mat, int n){
