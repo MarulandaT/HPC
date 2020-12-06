@@ -9,13 +9,13 @@
 //mpirun -np 4 -machinefile mfile ./exec 32
 //mpirun -np 4 -hosts head,wn1,wn2,wn3 ./exec 32
 
-void matMul(int n, int numranks, int rank, double* mat2, double* scatterMat, double* gatherMat);
-void writeTime(int wnodos, int hilos, int tam, double tiempo);
+void matMul(int n, int *hilos, int numranks, int rank, double* mat2, double* scatterMat, double* gatherMat);
+void writeTime(int wnodos, int nhilos, int tam, double tiempo);
 void printMat(double* mat, int n);
 
 int main(int argc, char *argv[]){
     int n = atoi(argv[1]);
-    int hilos = omp_get_num_threads();
+    int nhilos;
     int numranks, rank, len;
 
     double startTime;
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]){
     MPI_Scatter(&mat1[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, scatterMat, n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
     
-    matMul(n, numranks, rank, mat2, scatterMat, gatherMat);
+    matMul(n, &nhilos, numranks, rank, mat2, scatterMat, gatherMat);
 
     MPI_Gather(gatherMat, n*n/numranks, MPI_DOUBLE, &result[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
 
     if(rank == 0){	
         tiempo = endTime - startTime;
-        writeTime(numranks, hilos, n, tiempo);
+        writeTime(numranks, nhilos, n, tiempo);
         /*
         printf("\ntiempo: %3f\n", tiempo);
         printf("A\n");
@@ -74,19 +74,20 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
-void matMul(int n, int numranks, int rank, double* mat2, double* scatterMat, double* gatherMat){
+void matMul(int n, int *nhilos, int numranks, int rank, double* mat2, double* scatterMat, double* gatherMat){
     int fil, col, k, sum;
     int my_id, num_threads;
     int start_index, end_index, rows_per;
-    #pragma omp parallel firstprivate(mat2, scatterMat, gatherMat), private(fil, col, k, sum, my_id, num_threads, start_index, end_index, rows_per)
+    #pragma omp parallel firstprivate(mat2, scatterMat, gatherMat), private(fil, col, k, sum, my_id, num_threads, start_index, end_index, rows_per, nhilos)
     {
         my_id = omp_get_thread_num();
         num_threads = omp_get_num_threads();
+        nhilos = num_threads;
         rows_per = (n / numranks) / num_threads; 
         start_index = my_id * rows_per; 
         end_index = start_index + rows_per;
         sum = 0;
-        printf("Soy el hilo %i del procesador %i\n", my_id, rank);
+        //printf("Soy el hilo %i del procesador %i\n", my_id, rank);
         for(fil = start_index; fil < end_index; fil++){
             for(col = 0; col < n; col++){
                 for(k = 0; k < n; k++){
@@ -111,8 +112,8 @@ void printMat(double* mat, int n){
     printf("\n");
 }
 
-void writeTime(int wnodos, int hilos, int tam, double tiempo){
+void writeTime(int wnodos, int nhilos, int tam, double tiempo){
     FILE *f = fopen("timesOpenMPI.txt","a+");
-    fprintf(f,"%i;%i;%i;%.6lf\n", wnodos, hilos, tam, tiempo);
+    fprintf(f,"%i;%i;%i;%.6lf\n", wnodos, nhilos, tam, tiempo);
     fclose(f);
 }
