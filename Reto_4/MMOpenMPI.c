@@ -86,7 +86,7 @@ void matMul(int n, int numranks, int rank, double* mat2, double* scatterMat, dou
         start_index = my_id * rows_per; 
         end_index = start_index + rows_per;
         sum = 0;
-        //printf("Soy el hilo %i del procesador %i\n", my_id, rank);
+        printf("Soy el hilo %i del procesador %i\n", my_id, rank);
         for(fil = start_index; fil < end_index; fil++){
             for(col = 0; col < n; col++){
                 for(k = 0; k < n; k++){
