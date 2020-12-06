@@ -18,7 +18,7 @@ void printMat(int* mat, int n){
     {
         for(int j = 0; j < n; j++)
         {
-            printf("%.0f\t", mat[i*n+j]);
+            printf("%d\t", mat[i*n+j]);
         }
         printf("\n");
     }
