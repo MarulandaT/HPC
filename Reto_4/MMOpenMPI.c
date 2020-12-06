@@ -16,7 +16,6 @@ void printMat(double* mat, int n);
 int main(int argc, char *argv[]){
     int n = atoi(argv[1]);
     int numranks, rank, len;
-    //char hostname[MPI_MAX_PROCESSOR_NAME];
 
     double startTime;
     double endTime;
@@ -36,15 +35,14 @@ int main(int argc, char *argv[]){
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &numranks);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    //MPI_Get_processor_name(hostname, &len);
 
     double *scatterMat = (double *)malloc((n*n/numranks)*sizeof(double));
     double *gatherMat = (double *)malloc((n*n/numranks)*sizeof(double));
     double *result = (double *)malloc(n*n*sizeof(double));
 
-    MPI_Bcast(mat2, n*n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
     startTime = MPI_Wtime();
+
+    MPI_Bcast(mat2, n*n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     MPI_Scatter(&mat1[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, scatterMat, n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
