@@ -59,12 +59,12 @@ int main(int argc, char *argv[]){
         tiempo = endTime - startTime;
         printf("\ntiempo: %3f\n", tiempo);
         //writeTime(tiempo, n, numranks);
-        printf("A\n");
-        printMat(mat1, n);
-        printf("B\n");
-        printMat(mat2, n);
-        printf("Result\n");
-        printMat(result, n);
+        //printf("A\n");
+        //printMat(mat1, n);
+        //printf("B\n");
+        //printMat(mat2, n);
+        //printf("Result\n");
+        //printMat(result, n);
 	}
 
     MPI_Finalize();
@@ -74,7 +74,6 @@ int main(int argc, char *argv[]){
 
 void matMul(int n, int numranks, double* mat2, double* scatterMat, double* gatherMat){
     int fil, col, k, sum;
-    
     int my_id, num_threads;
     int start_index, end_index, rows_per;
     #pragma omp parallel firstprivate(mat2, scatterMat, gatherMat), private(fil, col, k, sum, my_id, num_threads, start_index, end_index, rows_per)
@@ -96,6 +95,7 @@ void matMul(int n, int numranks, double* mat2, double* scatterMat, double* gathe
         }
     }
     /*
+    int fil, col, k, sum;
     sum = 0;
     for(fil = 0; fil < n/numranks; fil++){
         for(col = 0; col < n; col++){
