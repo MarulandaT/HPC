@@ -6,8 +6,8 @@
 
 //mpicc -fopenmp MMOpenMPI.c -o exec
 //export OMP_NUM_THREADS=4
-//mpirun -np 4 -hosts head,wn1,wn2,wn3 ./exec 8
-//mpirun -np 4 -machinefile mfile ./exec 8
+//mpirun -np 4 -hosts head,wn1,wn2,wn3 ./exec 32
+//mpirun -np 4 -machinefile mfile ./exec 32
 
 void matMul(int n, int numranks, int rank, double* mat2, double* scatterMat, double* gatherMat);
 void writeTime(double tiempo, int tam, int wnodos);
@@ -87,7 +87,7 @@ void matMul(int n, int numranks, int rank, double* mat2, double* scatterMat, dou
         start_index = my_id * rows_per; 
         end_index = start_index + rows_per;
         sum = 0;
-        printf("Soy el hilo %i del procesador %i", my_id, rank);
+        printf("Soy el hilo %i del procesador %i\n", my_id, rank);
         for(fil = start_index; fil < end_index; fil++){
             for(col = 0; col < n; col++){
                 for(k = 0; k < n; k++){
