@@ -82,7 +82,7 @@ void matMul(int n, int *nhilos, int numranks, int rank, double* mat2, double* sc
     {
         my_id = omp_get_thread_num();
         num_threads = omp_get_num_threads();
-        nhilos = num_threads;
+        *nhilos = num_threads;
         rows_per = (n / numranks) / num_threads; 
         start_index = my_id * rows_per; 
         end_index = start_index + rows_per;
