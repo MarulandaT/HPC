@@ -10,11 +10,11 @@ args=("$@")
 exec(){
 	for trys in {1..5}
 	do
-		for msize in 32, 64, 128, 256, 512, 1024, 2048, 3072, 4096
+		for msize in 32 64 128 256 512 1024 2048 3072 4096
         do
-            for wnodes in 1, 4
+            for wnodes in 1 4
             do
-                for numthreads in 1, 4
+                for numthreads in 1 4
                 do
                     export OMP_NUM_THREADS=$numthreads
                     mpirun -np $wnodes -machinefile mfile ./run $msize
