@@ -18,7 +18,7 @@ void printMat(double* mat, int n){
     {
         for(int j = 0; j < n; j++)
         {
-            printf("%0f\t", mat[i*n+j]);
+            printf("%.0f\t", mat[i*n+j]);
         }
         printf("\n");
     }
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]){
 
     startTime = MPI_Wtime();
 
-    MPI_Scatter(&mat1[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, &scatterMat[0], n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Scatter(&mat1[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, scatterMat, n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
 
     int sum = 0;
@@ -66,14 +66,14 @@ int main(int argc, char *argv[]){
     for(int fil = 0; fil < n/numranks; fil++){
         for(int col = 0; col < n; col++){
             for(int k = 0; k < n; k++){
-                sum = sum + mat2[n*k+fil]*scatterMat[n*fil+k];
+                sum = sum + mat2[n*k+col]*scatterMat[n*fil+k];
             }
             gatherMat[n*fil+col] = sum;
             sum = 0;
         }
     }
 
-    MPI_Gather(&gatherMat[0], n*n/numranks, MPI_DOUBLE, &result[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Gather(gatherMat, n*n/numranks, MPI_DOUBLE, &result[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
 
     endTime = MPI_Wtime();
