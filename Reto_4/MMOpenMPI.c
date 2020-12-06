@@ -7,9 +7,9 @@
 //mpirun -np 4 -hosts head,wn1,wn2,wn3 ./exec 8
 //mpirun -np 4 -machinefile mfile ./exec 8
 
-void writeTime(double tiempo, int tam, int wnodos, int iterations){
+void writeTime(double tiempo, int tam, int wnodos){
     FILE *f = fopen("timesP2PMPI.txt","a+");
-    fprintf(f,"%i;%i;%i;%.6lf\n", wnodos, tam, iterations, tiempo);
+    fprintf(f,"%i;%i;%.6lf\n", wnodos, tam, tiempo);
     fclose(f);
 }
 
@@ -18,7 +18,7 @@ void printMat(int* mat, int n){
     {
         for(int j = 0; j < n; j++)
         {
-            printf("%d\t", mat[i*n+j]);
+            printf("%0f\t", mat[i*n+j]);
         }
         printf("\n");
     }
@@ -34,8 +34,8 @@ int main(int argc, char *argv[]){
     double endTime;
     double tiempo;
 
-    int *mat1 = (int *)malloc(n*n*sizeof(int));
-    int *mat2 = (int *)malloc(n*n*sizeof(int));
+    double *mat1 = (double *)malloc(n*n*sizeof(double));
+    double *mat2 = (double *)malloc(n*n*sizeof(double));
 
     srand(time(NULL));
     for(int i = 0; i < n; i++){
@@ -50,15 +50,15 @@ int main(int argc, char *argv[]){
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Get_processor_name(hostname, &len);
 
-    int *scatterMat = (int *)malloc((n*n/numranks)*sizeof(int));
-    int *gatherMat = (int *)malloc((n*n/numranks)*sizeof(int));
-    int *result = (int *)malloc(n*n*sizeof(int));
+    double *scatterMat = (double *)malloc((n*n/numranks)*sizeof(double));
+    double *gatherMat = (double *)malloc((n*n/numranks)*sizeof(double));
+    double *result = (double *)malloc(n*n*sizeof(double));
 
     MPI_Bcast(mat2, n*n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     startTime = MPI_Wtime();
 
-    MPI_Scatter(&mat1[(n*n/numranks)*rank], n*n/numranks, MPI_INT, &scatterMat[0], n*n/numranks, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatter(&mat1[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, &scatterMat[0], n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
 
     int sum = 0;
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]){
         }
     }
 
-    MPI_Gather(&gatherMat[0], n*n/numranks, MPI_INT, &result[(n*n/numranks)*rank], n*n/numranks, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gather(&gatherMat[0], n*n/numranks, MPI_DOUBLE, &result[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
 
     endTime = MPI_Wtime();
