@@ -26,6 +26,7 @@ void printMat(double* mat, int n){
 }
 
 int main(int argc, char *argv[]){
+    int n = atoi(argv[1]);
     int numranks, rank, len;
     char hostname[MPI_MAX_PROCESSOR_NAME];
 
@@ -79,7 +80,7 @@ int main(int argc, char *argv[]){
 
     if(rank == 0){	
         tiempo = endTime - startTime;
-        printf("\ntiempo: %3f\n", tiempo)
+        printf("\ntiempo: %3f\n", tiempo);
         //writeTime(tiempo, n, numranks);
         printf("A\n");
         printMat(mat1, n);
