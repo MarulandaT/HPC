@@ -73,12 +73,12 @@ int main(int argc, char *argv[]){
         tiempo = endTime - startTime;
         printf("\ntiempo: %3f\n", tiempo);
         //writeTime(tiempo, n, numranks);
-        //printf("A\n");
-        //printMat(mat1, n);
-        //printf("B\n");
-        //printMat(mat2, n);
-        //printf("Result\n");
-        //printMat(result, n);
+        printf("A\n");
+        printMat(mat1, n);
+        printf("B\n");
+        printMat(mat2, n);
+        printf("Result\n");
+        printMat(result, n);
 	}
 
     MPI_Finalize();
