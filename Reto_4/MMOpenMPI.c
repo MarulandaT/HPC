@@ -13,7 +13,7 @@ void writeTime(double tiempo, int tam, int wnodos, int iterations){
     fclose(f);
 }
 
-void printMat(double* mat, int n){
+void printMat(int* mat, int n){
     for(int i = 0; i < n; i++)
     {
         for(int j = 0; j < n; j++)
