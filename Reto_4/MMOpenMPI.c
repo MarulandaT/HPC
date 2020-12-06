@@ -12,7 +12,7 @@ void writeTime(double tiempo, int tam, int wnodos);
 
 void printMat(double* mat, int n);
 
-void Matmul(int n, double* mat2, double* scatterMat, double* gatherMat);
+void Matmul(int n, int numranks, double* mat2, double* scatterMat, double* gatherMat);
 
 int main(int argc, char *argv[]){
     int n = atoi(argv[1]);
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]){
         }
     }
     */
-    Matmul(n, mat2, scatterMat, gatherMat);
+    Matmul(n, numranks, mat2, scatterMat, gatherMat);
 
     MPI_Gather(gatherMat, n*n/numranks, MPI_DOUBLE, &result[(n*n/numranks)*rank], n*n/numranks, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
@@ -105,7 +105,7 @@ void writeTime(double tiempo, int tam, int wnodos){
     fclose(f);
 }
 
-void Matmul(int n, double* mat2, double* scatterMat, double* gatherMat){
+void Matmul(int n, int numranks, double* mat2, double* scatterMat, double* gatherMat){
     int sum = 0;
 
     for(int fil = 0; fil < n/numranks; fil++){
