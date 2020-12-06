@@ -40,8 +40,8 @@ int main(int argc, char *argv[]){
     srand(time(NULL));
     for(int i = 0; i < n; i++){
         for(int j = 0; j < n; j++){
-            mat1[i*n+j] = rand() % 11;
-            mat2[i*n+j] = rand() % 11;
+            mat1[i*n+j] = rand() % 10;
+            mat2[i*n+j] = rand() % 10;
         }
     }
 
