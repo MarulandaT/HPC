@@ -10,6 +10,7 @@ args=("$@")
 exec(){
 	for trys in {1..2}
 	do
+        echo "try 1"
 		for msize in 32 64 128 
         do
             for wnodes in 1 4
