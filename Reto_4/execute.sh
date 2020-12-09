@@ -10,7 +10,7 @@ args=("$@")
 exec(){
 	for trys in {1..5}
 	do
-		for msize in 32 64 128 256 512 1024 2048 3072 4096
+		for msize in 32 64 128 
         do
             for wnodes in 1 4
             do
