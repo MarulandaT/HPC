@@ -8,7 +8,7 @@ run='run' # run file
 args=("$@")
 
 exec(){
-	for trys in {1..5}
+	for trys in {1..2}
 	do
 		for msize in 32 64 128 
         do
